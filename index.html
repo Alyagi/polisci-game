@@ -1105,7 +1105,7 @@ ${note.options.map((o, i) => `${letters[i]}. ${o}`).join('\n')}
 분석 형식: 직접적이고 구체적으로. "이 문제에서 ~를 ~와 혼동한 것으로 보입니다" 식으로 시작.`;
 
   try {
-    const response = await fetch("/api/claude", {
+    const response = await fetch("/.netlify/functions/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1522,7 +1522,7 @@ ${alreadyAsked || '없음'}
 }`;
 
   try {
-    const response = await fetch("/api/claude", {
+    const response = await fetch("/.netlify/functions/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
