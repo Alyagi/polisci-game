@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>종합시험 정복기 — 비교정치 배틀</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;600&family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e28;
+    --border: #2a2f3e;
+    --gold: #c9a84c;
+    --gold2: #e8c96b;
+    --red: #e05252;
+    --green: #52c078;
+    --blue: #4a90d9;
+    --text: #dde4f0;
+    --muted: #7a85a0;
+    --accent: #8b5cf6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif KR', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .screen { position: relative; z-index: 1; }
+
+  /* ===== START SCREEN ===== */
+  #start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+  .title-block {
+    text-align: center;
+    margin-bottom: 50px;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 12px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 4rem);
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  h1 span { color: var(--gold); }
+  .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+    font-style: italic;
+    letter-spacing: 1px;
+  }
+  .stats-bar {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 16px 30px;
+    border-radius: 4px;
+  }
+  .stat { text-align: center; }
+  .stat-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 24px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    max-width: 800px;
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  .topic-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .topic-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.2s;
+  }
+  .topic-card:hover { border-color: var(--gold); background: var(--bg3); }
+  .topic-card:hover::after { transform: scaleX(1); }
+  .topic-card.selected { border-color: var(--gold); background: var(--bg3); }
+  .topic-card.selected::after { transform: scaleX(1); }
+  .topic-icon { font-size: 28px; margin-bottom: 10px; }
+  .topic-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .topic-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .topic-level {
+    position: absolute;
+    top: 10px; right: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+  .mode-row {
+    display: flex; gap: 14px;
+    max-width: 800px; width: 100%;
+    margin-bottom: 30px;
+  }
+  .mode-btn {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px;
+    cursor: pointer;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 13px;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 10px;
+    justify-content: center;
+  }
+  .mode-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .mode-btn.active { border-color: var(--gold); background: rgba(201,168,76,0.1); color: var(--gold); }
+  .start-btn {
+    background: var(--gold);
+    color: #0d0f14;
+    border: none;
+    padding: 18px 60px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+    margin-bottom: 20px;
+  }
+  .start-btn:hover { background: var(--gold2); transform: translateY(-2px); }
+  .start-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* ===== GAME SCREEN ===== */
+  #game-screen {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hud {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding: 14px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .hud-topic {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    flex: 1;
+  }
+  .hud-stat { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+  .hud-icon { font-size: 16px; }
+  .streak-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: #ff9f43;
+    font-weight: 600;
+  }
+  .score-display {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 15px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    margin-bottom: 30px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    transition: width 0.5s ease;
+    border-radius: 2px;
+  }
+
+  .q-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .q-difficulty {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+  }
+  .q-difficulty.easy { background: rgba(82,192,120,0.15); color: var(--green); }
+  .q-difficulty.medium { background: rgba(74,144,217,0.15); color: var(--blue); }
+  .q-difficulty.hard { background: rgba(139,92,246,0.15); color: var(--accent); }
+  .question-text {
+    font-size: clamp(16px, 2.5vw, 20px);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+  .keyword-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    margin-bottom: 30px;
+    border-radius: 2px;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option-btn {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 18px 24px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    transition: all 0.15s;
+    display: flex; align-items: flex-start; gap: 14px;
+    border-radius: 4px;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--bg3); }
+  .option-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 20px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .option-btn.correct { border-color: var(--green); background: rgba(82,192,120,0.1); }
+  .option-btn.wrong { border-color: var(--red); background: rgba(224,82,82,0.1); }
+  .option-btn.correct .option-letter { color: var(--green); }
+  .option-btn.wrong .option-letter { color: var(--red); }
+
+  .feedback-box {
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: var(--bg3);
+    border-left: 3px solid var(--gold);
+    display: none;
+    animation: slideIn 0.3s ease;
+  }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .feedback-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .feedback-title.correct { color: var(--green); }
+  .feedback-title.wrong { color: var(--red); }
+  .feedback-text { font-size: 14px; color: var(--text); line-height: 1.7; }
+  .feedback-scholar {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .next-btn {
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 14px 40px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: none;
+  }
+  .next-btn:hover { background: var(--gold); color: #0d0f14; }
+
+  /* Loading */
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+  }
+  .loading-spinner {
+    width: 50px; height: 50px;
+    border: 2px solid var(--border);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+  }
+  @keyframes dots {
+    0% { content: ''; }
+    33% { content: '.'; }
+    66% { content: '..'; }
+    100% { content: '...'; }
+  }
+
+  /* ===== RESULT SCREEN ===== */
+  #result-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .result-grade {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(60px, 15vw, 100px);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .result-label {
+    font-size: 14px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 40px;
+  }
+  .result-stat {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 20px;
+  }
+  .result-stat-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--gold);
+  }
+  .result-stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 6px;
+  }
+  .comment-box {
+    max-width: 500px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 20px 24px;
+    text-align: left;
+    margin-bottom: 30px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    font-style: italic;
+  }
+  .result-actions { display: flex; gap: 14px; }
+  .action-btn {
+    padding: 14px 30px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid var(--gold);
+  }
+  .action-btn.primary { background: var(--gold); color: #0d0f14; border-color: var(--gold); }
+  .action-btn.secondary { background: transparent; color: var(--gold); }
+  .action-btn:hover { transform: translateY(-2px); }
+
+  /* XP pop animation */
+  .xp-pop {
+    position: fixed;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--gold);
+    pointer-events: none;
+    z-index: 1000;
+    animation: xpFloat 1.5s ease-out forwards;
+  }
+  @keyframes xpFloat {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-80px) scale(1.3); }
+  }
+
+  .error-msg {
+    background: rgba(224,82,82,0.1);
+    border: 1px solid var(--red);
+    color: var(--red);
+    padding: 16px 20px;
+    font-size: 13px;
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 4px;
+  }
+
+  /* Decorative lines */
+  .divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 20px auto;
+  }
+  
+  .back-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: auto;
+    display: flex; align-items: center; gap: 6px;
+    transition: color 0.2s;
+  }
+  .back-btn:hover { color: var(--text); }
+
+  /* ===== 오답노트 ===== */
+  #notebook-screen {
+    display: none;
+    min-height: 100vh;
+    padding: 30px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .notebook-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .notebook-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--text);
+    flex: 1;
+  }
+  .notebook-title span { color: var(--red); }
+  .notebook-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 6px 14px;
+  }
+  .notebook-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .nb-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+  .nb-tab.active { color: var(--red); border-bottom-color: var(--red); }
+  .nb-tab:hover:not(.active) { color: var(--text); }
+  .notebook-filter {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-chip {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 20px;
+  }
+  .filter-chip.active { border-color: var(--gold); color: var(--gold); background: rgba(201,168,76,0.1); }
+  .filter-chip:hover:not(.active) { border-color: var(--text); color: var(--text); }
+  .notebook-list { display: flex; flex-direction: column; gap: 16px; }
+  .note-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--red);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .note-card.mastered { border-left-color: var(--green); }
+  .note-card-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .note-card-header:hover { background: var(--bg3); }
+  .note-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+  .note-topic-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    background: var(--bg3);
+    padding: 2px 8px;
+    border-radius: 2px;
+    align-self: flex-start;
+    margin-bottom: 4px;
+  }
+  .note-question {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .note-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .note-toggle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px;
+    color: var(--muted);
+    min-width: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .note-card.open .note-toggle { transform: rotate(180deg); }
+  .note-body {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid var(--border);
+    animation: slideIn 0.2s ease;
+  }
+  .note-card.open .note-body { display: block; }
+  .note-section {
+    margin-top: 16px;
+  }
+  .note-section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .note-my-answer {
+    background: rgba(224,82,82,0.08);
+    border: 1px solid rgba(224,82,82,0.3);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--red);
+    border-radius: 3px;
+    line-height: 1.5;
+  }
+  .note-correct-answer {
+    background: rgba(82,192,120,0.08);
+    border: 1px solid rgba(82,192,120,0.3);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--green);
+    border-radius: 3px;
+    line-height: 1.5;
+  }
+  .note-explanation {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+    padding: 10px 0;
+  }
+  .note-analysis {
+    background: rgba(139,92,246,0.08);
+    border: 1px solid rgba(139,92,246,0.3);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #c4b5fd;
+    border-radius: 3px;
+    line-height: 1.6;
+    display: none;
+  }
+  .note-analysis.loaded { display: block; }
+  .note-analysis-loading {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 10px 0;
+  }
+  .mini-spinner {
+    width: 14px; height: 14px;
+    border: 1px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  .note-actions {
+    display: flex; gap: 8px; margin-top: 14px;
+    flex-wrap: wrap;
+  }
+  .note-action-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 7px 14px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+  .note-action-btn:hover { border-color: var(--text); color: var(--text); }
+  .note-action-btn.analyze { border-color: var(--accent); color: var(--accent); }
+  .note-action-btn.analyze:hover { background: rgba(139,92,246,0.1); }
+  .note-action-btn.mastered-btn { border-color: var(--green); color: var(--green); }
+  .note-action-btn.mastered-btn:hover { background: rgba(82,192,120,0.1); }
+  .note-action-btn.delete-btn:hover { border-color: var(--red); color: var(--red); }
+  .empty-notebook {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--muted);
+  }
+  .empty-notebook .empty-icon { font-size: 50px; margin-bottom: 16px; }
+  .empty-notebook .empty-title { font-size: 18px; color: var(--text); margin-bottom: 8px; }
+  .empty-notebook .empty-desc { font-size: 13px; line-height: 1.6; }
+  .notebook-actions-row {
+    display: flex; gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .nb-action-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nb-action-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .retry-wrong-btn {
+    background: rgba(224,82,82,0.1);
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .retry-wrong-btn:hover { background: rgba(224,82,82,0.2); }
+  
+  /* Notebook button on start screen */
+  .notebook-open-btn {
+    position: fixed;
+    top: 20px; right: 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 100;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .notebook-open-btn:hover { border-color: var(--red); color: var(--red); }
+  .notebook-badge {
+    background: var(--red);
+    color: white;
+    font-size: 10px;
+    border-radius: 10px;
+    padding: 1px 6px;
+    min-width: 18px;
+    text-align: center;
+  }
+  .streak-flame {
+    display: inline-block;
+    animation: flame 0.6s ease-in-out infinite alternate;
+  }
+  @keyframes flame {
+    from { transform: scale(1) rotate(-5deg); }
+    to { transform: scale(1.2) rotate(5deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating notebook button -->
+<button class="notebook-open-btn" id="notebook-float-btn" onclick="showNotebook()">
+  📓 오답노트 <span class="notebook-badge" id="notebook-badge">0</span>
+</button>
+
+<!-- START SCREEN -->
+<div id="start-screen" class="screen">
+  <div class="title-block">
+    <div class="badge">종합시험 대비</div>
+    <h1>비교정치 <span>배틀</span></h1>
+    <div class="subtitle">정치학 종합시험 정복을 위한 게임형 학습</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-val" id="total-score">0</div>
+      <div class="stat-label">총 XP</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="total-correct">0</div>
+      <div class="stat-label">정답 수</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" id="best-streak">0</div>
+      <div class="stat-label">최고 연속</div>
+    </div>
+  </div>
+
+  <div class="topic-grid" id="topic-grid">
+    <div class="topic-card" data-topic="민주주의기초">
+      <div class="topic-level">CORE</div>
+      <div class="topic-icon">🏛️</div>
+      <div class="topic-name">민주주의 기초</div>
+      <div class="topic-desc">Dahl, 폴리아키, 민주주의 기원, 토크빌, 프르제보르스키</div>
+    </div>
+    <div class="topic-card" data-topic="선거제도와정당체제">
+      <div class="topic-level">HIGH</div>
+      <div class="topic-icon">🗳️</div>
+      <div class="topic-name">선거제도 & 정당체제</div>
+      <div class="topic-desc">뒤베르제의 법칙, 기계적·심리적 효과, 파편성, 비례대표제</div>
+    </div>
+    <div class="topic-card" data-topic="민주주의퇴행">
+      <div class="topic-level">HIGH</div>
+      <div class="topic-icon">📉</div>
+      <div class="topic-name">민주주의 퇴행</div>
+      <div class="topic-desc">Bermeo, 행정력 강화, 포퓰리즘, 양극화, 민주화 이론</div>
+    </div>
+    <div class="topic-card" data-topic="정치제도">
+      <div class="topic-level">CORE</div>
+      <div class="topic-icon">⚖️</div>
+      <div class="topic-name">정치제도론</div>
+      <div class="topic-desc">신·구제도주의, 역사적·합리적 선택 제도주의, 거부권 행위자</div>
+    </div>
+    <div class="topic-card" data-topic="비교권위주의">
+      <div class="topic-level">ADV</div>
+      <div class="topic-icon">👁️</div>
+      <div class="topic-name">비교권위주의</div>
+      <div class="topic-desc">권위주의 유형, 내구성, 선거권위주의, 혼합체제</div>
+    </div>
+    <div class="topic-card" data-topic="민주화이론">
+      <div class="topic-level">ADV</div>
+      <div class="topic-icon">🌱</div>
+      <div class="topic-name">민주화 이론</div>
+      <div class="topic-desc">모더니제이션, 엘리트 협약, 사회구조적 접근, 제3물결</div>
+    </div>
+  </div>
+
+  <div class="mode-row">
+    <button class="mode-btn active" data-mode="quiz" id="mode-quiz">📝 &nbsp;객관식 퀴즈</button>
+    <button class="mode-btn" data-mode="hard" id="mode-hard">🔥 &nbsp;하드모드 (어려운 문제)</button>
+    <button class="mode-btn" data-mode="exam" id="mode-exam">📋 &nbsp;기출 스타일</button>
+  </div>
+
+  <button class="start-btn" id="start-btn" disabled>주제를 선택하세요</button>
+  <div style="font-size:12px; color:var(--muted); font-family:'IBM Plex Mono',monospace;">10문항 · AI 실시간 생성 · 학습자료 기반</div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="game-screen" class="screen">
+  <div class="hud">
+    <button class="back-btn" onclick="goHome()">← 홈</button>
+    <div class="hud-topic" id="hud-topic">민주주의</div>
+    <div class="hud-stat">
+      <span class="hud-icon">🔥</span>
+      <span class="streak-display" id="streak">0</span>
+    </div>
+    <div class="hud-stat">
+      <span class="hud-icon">⭐</span>
+      <span class="score-display" id="score">0 XP</span>
+    </div>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div id="question-area"></div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen" class="screen">
+  <div class="result-grade" id="result-grade">A+</div>
+  <div class="result-label" id="result-label">Distinction</div>
+  <div class="divider"></div>
+  <div class="result-stats">
+    <div class="result-stat">
+      <div class="result-stat-val" id="r-correct">-</div>
+      <div class="result-stat-label">정답</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-stat-val" id="r-score">-</div>
+      <div class="result-stat-label">XP 획득</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-stat-val" id="r-streak">-</div>
+      <div class="result-stat-label">최고 연속</div>
+    </div>
+  </div>
+  <div class="comment-box" id="result-comment"></div>
+  <div class="result-actions">
+    <button class="action-btn secondary" onclick="goHome()">← 다른 주제</button>
+    <button class="action-btn secondary" onclick="showNotebook()" style="border-color:var(--red);color:var(--red);">📓 오답노트</button>
+    <button class="action-btn primary" onclick="restartGame()">다시 도전</button>
+  </div>
+</div>
+
+<!-- NOTEBOOK SCREEN -->
+<div id="notebook-screen" class="screen">
+  <div class="notebook-header">
+    <button class="back-btn" onclick="goHome()">← 홈</button>
+    <div class="notebook-title">오답 <span>노트</span></div>
+    <div class="notebook-count" id="nb-count">0개</div>
+  </div>
+  <div class="notebook-tabs">
+    <button class="nb-tab active" data-tab="all" onclick="switchNbTab('all', this)">전체</button>
+    <button class="nb-tab" data-tab="wrong" onclick="switchNbTab('wrong', this)">미숙지</button>
+    <button class="nb-tab" data-tab="mastered" onclick="switchNbTab('mastered', this)">완전숙지 ✓</button>
+  </div>
+  <div class="notebook-filter" id="nb-filter"></div>
+  <div class="notebook-actions-row">
+    <button class="nb-action-btn retry-wrong-btn" onclick="retryWrong()">🔁 오답만 다시 풀기</button>
+    <button class="nb-action-btn" onclick="clearMastered()">✓ 완전숙지 초기화</button>
+    <button class="nb-action-btn" onclick="clearAllNotes()" style="color:var(--red);border-color:var(--red)">🗑 전체 삭제</button>
+  </div>
+  <div class="notebook-list" id="notebook-list"></div>
+</div>
+
+<script>
+// ====== NOTEBOOK DATA ======
+let wrongNotes = JSON.parse(localStorage.getItem('wrongNotes') || '[]');
+let currentNbTab = 'all';
+let currentNbFilter = 'all';
+
+const topicLabels = {
+  '민주주의기초': '민주주의 기초',
+  '선거제도와정당체제': '선거제도 & 정당체제',
+  '민주주의퇴행': '민주주의 퇴행',
+  '정치제도': '정치제도론',
+  '비교권위주의': '비교권위주의',
+  '민주화이론': '민주화 이론'
+};
+
+function saveWrongAnswer(q, myIdx, topic) {
+  const note = {
+    id: Date.now() + Math.random(),
+    topic: topic,
+    question: q.question,
+    keyword: q.keyword,
+    difficulty: q.difficulty,
+    scholar: q.scholar,
+    options: q.options,
+    correctIdx: q.correct,
+    myIdx: myIdx,
+    explanation: q.explanation,
+    date: new Date().toLocaleDateString('ko-KR'),
+    mastered: false,
+    analysis: null
+  };
+  wrongNotes.unshift(note);
+  // Keep max 100 notes
+  if (wrongNotes.length > 100) wrongNotes = wrongNotes.slice(0, 100);
+  localStorage.setItem('wrongNotes', JSON.stringify(wrongNotes));
+  updateNotebookBadge();
+}
+
+function updateNotebookBadge() {
+  const unmastered = wrongNotes.filter(n => !n.mastered).length;
+  document.getElementById('notebook-badge').textContent = unmastered;
+}
+
+function showNotebook() {
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('notebook-screen').style.display = 'block';
+  renderNotebook();
+}
+
+function switchNbTab(tab, el) {
+  currentNbTab = tab;
+  document.querySelectorAll('.nb-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderNotebook();
+}
+
+function renderNotebook() {
+  // Filter chips
+  const topics = [...new Set(wrongNotes.map(n => n.topic))];
+  const filterDiv = document.getElementById('nb-filter');
+  filterDiv.innerHTML = `
+    <button class="filter-chip ${currentNbFilter === 'all' ? 'active' : ''}" onclick="setNbFilter('all')">전체 주제</button>
+    ${topics.map(t => `<button class="filter-chip ${currentNbFilter === t ? 'active' : ''}" onclick="setNbFilter('${t}')">${topicLabels[t] || t}</button>`).join('')}
+  `;
+
+  let filtered = wrongNotes;
+  if (currentNbFilter !== 'all') filtered = filtered.filter(n => n.topic === currentNbFilter);
+  if (currentNbTab === 'wrong') filtered = filtered.filter(n => !n.mastered);
+  if (currentNbTab === 'mastered') filtered = filtered.filter(n => n.mastered);
+
+  document.getElementById('nb-count').textContent = `${wrongNotes.filter(n=>!n.mastered).length}개 미숙지`;
+
+  const list = document.getElementById('notebook-list');
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="empty-notebook">
+        <div class="empty-icon">${currentNbTab === 'mastered' ? '🎉' : '📝'}</div>
+        <div class="empty-title">${currentNbTab === 'mastered' ? '완전숙지 항목이 없습니다' : '오답 기록이 없습니다'}</div>
+        <div class="empty-desc">${currentNbTab === 'mastered' ? '틀린 문제를 복습하고 완전숙지 처리해보세요!' : '게임을 플레이하면 틀린 문제가 자동으로 여기 저장됩니다.'}</div>
+      </div>
+    `;
+    return;
+  }
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const diffMap = { easy: '기초', medium: '중급', hard: '심화' };
+
+  list.innerHTML = filtered.map((note, i) => `
+    <div class="note-card ${note.mastered ? 'mastered' : ''}" id="note-${note.id}">
+      <div class="note-card-header" onclick="toggleNote('${note.id}')">
+        <div class="note-meta">
+          <span class="note-topic-badge">${topicLabels[note.topic] || note.topic} · ${diffMap[note.difficulty] || note.difficulty}</span>
+          <div class="note-question">${note.question}</div>
+          <div class="note-date">🗓 ${note.date} · # ${note.keyword} ${note.mastered ? '· ✓ 완전숙지' : ''}</div>
+        </div>
+        <span class="note-toggle">▼</span>
+      </div>
+      <div class="note-body" id="body-${note.id}">
+        <div class="note-section">
+          <div class="note-section-label">❌ 내가 선택한 답</div>
+          <div class="note-my-answer">${letters[note.myIdx]}. ${note.options[note.myIdx]}</div>
+        </div>
+        <div class="note-section">
+          <div class="note-section-label">✅ 정답</div>
+          <div class="note-correct-answer">${letters[note.correctIdx]}. ${note.options[note.correctIdx]}</div>
+        </div>
+        <div class="note-section">
+          <div class="note-section-label">📖 해설 ${note.scholar ? '— ' + note.scholar : ''}</div>
+          <div class="note-explanation">${note.explanation}</div>
+        </div>
+        <div class="note-section">
+          <div class="note-section-label">🔍 AI 오답 분석</div>
+          <div id="analysis-${note.id}" class="note-analysis ${note.analysis ? 'loaded' : ''}">${note.analysis || ''}</div>
+          ${!note.analysis ? `<div class="note-analysis-loading" id="anlod-${note.id}" style="display:none"><div class="mini-spinner"></div>분석 중...</div>` : ''}
+        </div>
+        <div class="note-actions">
+          ${!note.analysis ? `<button class="note-action-btn analyze" onclick="analyzeWrong('${note.id}')">🔍 왜 틀렸는지 분석</button>` : ''}
+          ${!note.mastered ? `<button class="note-action-btn mastered-btn" onclick="markMastered('${note.id}')">✓ 완전숙지 처리</button>` : '<span style="font-size:12px;color:var(--green);font-family:\'IBM Plex Mono\',monospace;">✓ 완전숙지 완료</span>'}
+          <button class="note-action-btn delete-btn" onclick="deleteNote('${note.id}')">삭제</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function setNbFilter(f) {
+  currentNbFilter = f;
+  renderNotebook();
+}
+
+function toggleNote(id) {
+  const card = document.getElementById(`note-${id}`);
+  card.classList.toggle('open');
+}
+
+async function analyzeWrong(id) {
+  const note = wrongNotes.find(n => String(n.id) === String(id));
+  if (!note) return;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  const loadEl = document.getElementById(`anlod-${id}`);
+  const analysisEl = document.getElementById(`analysis-${id}`);
+  
+  if (loadEl) loadEl.style.display = 'flex';
+  
+  const prompt = `정치학 종합시험 학습자가 다음 문제를 틀렸습니다. 왜 이 오답을 선택했는지, 어떤 개념을 헷갈린 것인지, 올바른 이해를 위해 무엇을 공부해야 하는지 한국어로 간결하게 분석해주세요 (3-4문장).
+
+문제: ${note.question}
+
+선택지:
+${note.options.map((o, i) => `${letters[i]}. ${o}`).join('\n')}
+
+학습자 선택 (오답): ${letters[note.myIdx]}. ${note.options[note.myIdx]}
+정답: ${letters[note.correctIdx]}. ${note.options[note.correctIdx]}
+
+해설: ${note.explanation}
+
+관련 학자: ${note.scholar || '없음'}
+
+분석 형식: 직접적이고 구체적으로. "이 문제에서 ~를 ~와 혼동한 것으로 보입니다" 식으로 시작.`;
+
+  try {
+    const response = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-5",
+        max_tokens: 400,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await response.json();
+    const text = data.content.map(i => i.text || "").join("");
+    
+    note.analysis = text;
+    localStorage.setItem('wrongNotes', JSON.stringify(wrongNotes));
+    
+    if (loadEl) loadEl.style.display = 'none';
+    if (analysisEl) {
+      analysisEl.textContent = text;
+      analysisEl.classList.add('loaded');
+    }
+  } catch(e) {
+    if (loadEl) loadEl.style.display = 'none';
+    if (analysisEl) {
+      analysisEl.textContent = '분석 중 오류가 발생했습니다.';
+      analysisEl.classList.add('loaded');
+    }
+  }
+}
+
+function markMastered(id) {
+  const note = wrongNotes.find(n => String(n.id) === String(id));
+  if (note) {
+    note.mastered = true;
+    localStorage.setItem('wrongNotes', JSON.stringify(wrongNotes));
+    updateNotebookBadge();
+    renderNotebook();
+  }
+}
+
+function deleteNote(id) {
+  wrongNotes = wrongNotes.filter(n => String(n.id) !== String(id));
+  localStorage.setItem('wrongNotes', JSON.stringify(wrongNotes));
+  updateNotebookBadge();
+  renderNotebook();
+}
+
+function clearMastered() {
+  wrongNotes = wrongNotes.filter(n => !n.mastered);
+  localStorage.setItem('wrongNotes', JSON.stringify(wrongNotes));
+  updateNotebookBadge();
+  renderNotebook();
+}
+
+function clearAllNotes() {
+  if (confirm('오답노트를 전부 삭제하시겠습니까?')) {
+    wrongNotes = [];
+    localStorage.setItem('wrongNotes', JSON.stringify(wrongNotes));
+    updateNotebookBadge();
+    renderNotebook();
+  }
+}
+
+function retryWrong() {
+  const unmastered = wrongNotes.filter(n => !n.mastered && (currentNbFilter === 'all' || n.topic === currentNbFilter));
+  if (unmastered.length === 0) {
+    alert('미숙지 오답이 없습니다! 🎉');
+    return;
+  }
+  // Pick topic from first unmastered or mixed
+  const topics = [...new Set(unmastered.map(n => n.topic))];
+  currentTopic = topics[0]; // use first topic as base
+  retryQuestions = unmastered.slice(0, 10);
+  startRetryGame();
+}
+
+// ====== RETRY WRONG ANSWERS MODE ======
+let retryQuestions = [];
+let isRetryMode = false;
+
+function startRetryGame() {
+  isRetryMode = true;
+  score = 0;
+  streak = 0;
+  bestStreak = 0;
+  correctCount = 0;
+  currentQ = 0;
+  questions = retryQuestions.map(n => ({
+    question: n.question,
+    difficulty: n.difficulty,
+    keyword: n.keyword,
+    options: n.options,
+    correct: n.correctIdx,
+    explanation: n.explanation,
+    scholar: n.scholar
+  }));
+  totalQ = questions.length;
+  answered = false;
+
+  document.getElementById('notebook-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('hud-topic').textContent = '🔁 오답 재도전';
+  updateHUD();
+  renderQuestion(questions[0]);
+}
+</script>
+
+<script>
+// ====== STATE ======
+let currentTopic = null;
+let currentMode = 'quiz';
+let currentQ = 0;
+let totalQ = 10;
+let score = 0;
+let streak = 0;
+let bestStreak = 0;
+let correctCount = 0;
+let questions = [];
+let answered = false;
+let totalXP = parseInt(localStorage.getItem('totalXP') || '0');
+let totalCorrect = parseInt(localStorage.getItem('totalCorrect') || '0');
+let savedBestStreak = parseInt(localStorage.getItem('bestStreak') || '0');
+
+// ====== STUDY CONTENT ======
+const studyContent = {
+  '민주주의기초': `
+로버트 달(Robert Dahl)의 민주주의 이론:
+- 폴리아키(Polyarchy): 실질적 민주주의. 경쟁(Contestation)과 포용(Inclusion)의 두 차원. 7가지 조건: 선출된 공직자, 자유롭고 공정한 선거, 포괄적 참정권, 피선거권, 언론의 자유, 대안적 정보 접근, 결사의 자유
+- 민주주의 최소 기준: 선거를 통한 정권교체 가능성
+- 민주주의는 2,500년 전 고대 그리스에서 발명, 직선적·필연적 발전이 아닌 우연적 발전과 후퇴 반복
+- 아테네 민주주의: 민회(assembly) 중심, 추첨·제비뽑기로 공직자 선출, 직접 민주주의
+- 로마 공화정: 기원전 130년경 이후 시민정신 쇠퇴로 약화, 대의제 채택 안 함
+
+토크빌(Tocqueville), 앙시엥 레짐과 프랑스 혁명:
+- 단절론 비판: 프랑스 혁명은 이전 유산과 완전히 단절되지 않음, 연속적 역사
+- 중앙집권화는 혁명의 결과가 아닌 앙시엥 레짐의 산물
+- 불평등이 프랑스 혁명의 근본 원인
+- 프랑스 혁명 = "이상한 종교": 보편적 가치(평등, 국민주권) 전파 지향
+
+프르제보르스키(Przeworski) 민주주의와 발전:
+- 소득수준과 민주주의 관계 분석
+- 민주주의는 경제 발전의 원인이 아닌 결과일 수 있음
+- 부유한 국가에서 민주주의가 더 오래 지속됨(내구성)
+
+맨커 올슨(Mancur Olson):
+- 독재와 민주주의, 발전: 정착한 강도(stationary bandit) vs 떠돌이 강도(roving bandit)
+- 독재자도 사회 발전에 관심 가짐(세금 기반 유지)
+- 민주주의: 다수의 이익 대변, 재산권 보호 강조
+`,
+
+  '선거제도와정당체제': `
+뒤베르제의 법칙(Duverger's Law):
+- 소선거구 단순다수대표제(SMDP): 양당제 경향
+- 비례대표제(PR): 다당제 경향
+- 기계적 효과(Mechanical Effect): 승자독식 구조로 소수정당 의석 획득 어려움
+- 심리적 효과(Psychological Effect): 유권자의 사표 방지 전략 → 주요 정당에 표 집중
+
+정당체제 파편성(Fragmentation):
+- 유효정당수(Effective Number of Parties, ENP)로 측정
+- 파편성 ↑ → 책임성 ↓, 응답성 ↓, 대표성 ↑, 조응성 ↑
+- 책임성(Accountability): 파편성 높을수록 연립정부 → 책임소재 불명확
+- 응답성(Responsiveness): 연립정부 합의 어려움 → 정책결정 지연
+- 대표성(Representativeness): 소수정당 원내 진출 → 다양한 이익 대변
+
+선거제도 유형:
+- 소선거구제: 파편성 가장 낮음 (양당제)
+- 중대선거구 다수대표제: 중간 수준
+- 비례대표제: 파편성 가장 높음 (다당제)
+
+동시선거 효과:
+- 대선과 총선 동시 실시 시 야권 단결 → 파편성 감소
+- 현직 대통령 재선 허용 + 동시선거 = 파편성 감소 효과 극대화
+
+사르토리(Sartori) 정당체제 분류:
+- 일당우위제, 양당제, 온건다당제, 극단다당제, 원자화 정당체제
+- 이념적 거리와 원심적/구심적 경쟁 개념
+`,
+
+  '민주주의퇴행': `
+낸시 버메오(Nancy Bermeo), 민주주의 퇴행:
+- 구 권위주의 특징 감소: 쿠데타, 행정 쿠데타(친위 쿠데타), 부정선거
+- 새로운 퇴행 유형 3가지:
+  1. 약속 쿠데타(Promissory coup): 민주주의 복원 약속 후 이행 안 함
+  2. 행정력 강화(Executive aggrandizement): 의회·사법부·언론 약화, 고발로 정적 제거
+  3. 전략적 선거 조작(Strategic election manipulation): 선관위·언론 통제
+
+포퓰리즘과 민주주의 퇴행:
+- Ghia Nodia: 포퓰리스트 = 진정한 민의 대변 주장, 실제로는 1인 집중 대의제
+- 직접 민주주의와 거리 멀어짐, 중간 제도 무시
+
+민주주의 퇴행 원인 이론:
+1. 에이전시 기반 이론: 정치 행위자의 우발적 결정 (구조 간과)
+2. 정치문화 이론: 문화 변수 (단기 변화 설명 어려움)
+3. 정치제도 이론: 대통령제 vs 의회제 차이 (통계적 유의성 부족)
+4. 정치경제학 이론: 불평등 심화, 중산층 붕괴 (통계적 유의성 부족)
+5. 사회구조와 정치연합 이론
+
+정치적 양극화(McCoy, Rahman, Somer):
+- 전 세계 민주주의 퇴행의 주요 패턴
+- 포퓰리스트 지도자 등장과 양극화 악순환
+
+민주화 이론:
+- 모더니제이션(Modernization) 이론: 경제 발전 → 민주화 (립셋)
+- 엘리트 협약(Elite Pact) 이론: 구 엘리트와 민주화 세력 간 협상
+- 사회구조 이론: 부르주아지와 노동계급의 역할 (무어, 루쇼마이어)
+`,
+
+  '정치제도': `
+정당(Political Party):
+- 사르토리 정의: 선거에서 공식 라벨로 인식, 공직을 목표로 후보 배치 능력
+- 정당 기능: 정치적 충원, 정권 담당·견제, 이익 집약·조정, 대표 기능, 의사표현 기능
+
+제도주의(Institutionalism):
+- 구 제도주의(Old): 공식적·법적 제도 중심, 정태적, 기술적
+- 신 제도주의(New): 비공식 제도 포함, 제도가 행위자 선호와 행동을 형성
+
+역사적 제도주의(Historical Institutionalism):
+- 경로의존성(Path Dependency): 초기 선택이 이후 제도 발전 제약
+- 결정적 분기점(Critical Juncture): 제도 변화의 계기
+- 비효율적 제도도 지속될 수 있음
+
+합리적 선택 제도주의(Rational Choice Institutionalism):
+- 제도 = 행위자 간 전략적 상호작용의 결과
+- 제도는 불확실성 감소, 거래비용 절감
+- 공식적 규칙 강조
+
+사회학적 제도주의(Sociological Institutionalism):
+- 제도는 문화·인지적 요소 포함
+- 정당성(Legitimacy) 확보를 위한 동형화(Isomorphism)
+
+거부권 행위자(Veto Player, Tsebelis):
+- 현상 유지 변경을 위해 동의가 필요한 행위자
+- 거부권 행위자 수 ↑ → 정책 변화 어려움 (정책 안정성 ↑)
+- 제도적 거부권 행위자 vs 당파적 거부권 행위자
+
+연방제와 양원제(Federalism & Bicameralism):
+- 연방제: 중앙·지방 간 권한 분산
+- 양원제: 거부권 행위자 증가 효과
+
+합의제 민주주의(Consociationalism, Lijphart):
+- 분절된 사회의 민주주의 안정화
+- 대연합, 상호 거부권, 비례성, 분절 자율성
+`,
+
+  '비교권위주의': `
+권위주의 체제 유형:
+- 개인독재(Personalism): 지도자 개인에 권력 집중
+- 군사독재(Military Junta): 군부 집단 통치
+- 단일정당제(Single Party): 하나의 정당이 권력 독점
+- 군주제(Monarchy): 왕조에 의한 통치
+- 혼합형(Hybrid): 복수 요소 결합
+
+권위주의 내구성(Durability):
+- 권력 분배 메커니즘: 엘리트에게 지대(rent) 배분
+- 억압(Repression) vs 포용(Inclusion) 전략
+- 선거 실시: 정보 수집, 정당성 확보, 엘리트 통제 도구
+- 쿠데타 방지: 역균형(Counterbalancing) 전략
+
+선거 권위주의(Electoral Authoritarianism, Schedler):
+- 다당선거 실시하지만 불공정
+- 경쟁적 권위주의(Competitive Authoritarianism, Levitsky & Way)
+- 헤게모닉 선거 권위주의 vs 경쟁적 권위주의
+
+혼합체제(Hybrid Regime):
+- 민주주의와 권위주의 혼합
+- 일리버럴 민주주의(Illiberal Democracy)
+- 게도 파르도시(Diamond): 선거민주주의와 자유민주주의 구분
+
+권위주의 붕괴 원인:
+- 경제 위기, 엘리트 분열, 대중 동원, 외부 압력
+- 내부 자유화(Liberalization) vs 민주화(Democratization)
+`,
+
+  '민주화이론': `
+모더니제이션 이론(Modernization Theory):
+- 립셋(Lipset): 경제 발전 → 중산층 성장 → 민주주의 압력
+- 소득수준과 민주주의 정적 상관관계
+- 비판: 역사적 반례 존재, 인과관계 방향 불명확
+
+바링턴 무어(Barrington Moore):
+- "부르주아 없이 민주주의 없다"
+- 농업 엘리트(지주)와 부르주아지의 역할
+- 세 가지 경로: 민주주의, 파시즘, 공산주의
+
+루쇼마이어(Rueschemeyer et al.):
+- 자본주의 발전과 민주주의: 노동계급의 역할 강조
+- 계급 동맹과 권력 균형
+
+전환론(Transitology):
+- O'Donnell & Schmitter: 불확실성 속의 전환
+- 강경파(Hardliners) vs 온건파(Softliners) 내 분열
+- 엘리트 협약(Pact)의 역할
+
+헌팅턴(Huntington), 제3의 물결:
+- 1974~1990년대 민주화 물결
+- 원인: 정당성 위기, 경제 성장, 종교, 국제 환경
+
+린츠와 스테판(Linz & Stepan):
+- 민주주의 공고화(Consolidation) 조건
+- "유일한 게임 규칙"으로 민주주의 수용
+- 5개 영역: 시민사회, 정치사회, 법치, 국가기구, 경제사회
+
+프르제보르스키:
+- 민주주의 = 조직화된 불확실성
+- 패자의 준수(Losers' Consent): 선거 결과 수용
+- 소득수준과 민주주의 내구성 관계
+`
+};
+
+// ====== INIT ======
+document.getElementById('total-score').textContent = totalXP;
+document.getElementById('total-correct').textContent = totalCorrect;
+document.getElementById('best-streak').textContent = savedBestStreak;
+updateNotebookBadge();
+
+// Topic selection
+document.querySelectorAll('.topic-card').forEach(card => {
+  card.addEventListener('click', () => {
+    document.querySelectorAll('.topic-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    currentTopic = card.dataset.topic;
+    document.getElementById('start-btn').disabled = false;
+    document.getElementById('start-btn').textContent = '시작하기 →';
+  });
+});
+
+// Mode selection
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+  });
+});
+
+document.getElementById('start-btn').addEventListener('click', startGame);
+
+async function startGame() {
+  if (!currentTopic) return;
+  isRetryMode = false;
+  totalQ = 10;
+  score = 0;
+  streak = 0;
+  bestStreak = 0;
+  correctCount = 0;
+  currentQ = 0;
+  questions = [];
+  answered = false;
+
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'block';
+  document.getElementById('result-screen').style.display = 'none';
+
+  const topicNames = {
+    '민주주의기초': '민주주의 기초',
+    '선거제도와정당체제': '선거제도 & 정당체제',
+    '민주주의퇴행': '민주주의 퇴행',
+    '정치제도': '정치제도론',
+    '비교권위주의': '비교권위주의',
+    '민주화이론': '민주화 이론'
+  };
+  document.getElementById('hud-topic').textContent = topicNames[currentTopic];
+  updateHUD();
+  await loadNextQuestion();
+}
+
+function updateHUD() {
+  document.getElementById('streak').textContent = streak;
+  document.getElementById('score').textContent = score + ' XP';
+  const pct = (currentQ / totalQ) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+async function loadNextQuestion() {
+  const area = document.getElementById('question-area');
+  area.innerHTML = `
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">문제 생성 중<span class="loading-dots"></span></div>
+    </div>
+  `;
+  updateHUD();
+
+  const modeInstructions = {
+    'quiz': '적당한 난이도의 4지선다 문제를 만들어주세요. 종합시험에 나올 법한 개념 이해 문제.',
+    'hard': '어렵고 심화된 4지선다 문제. 학자 간 이론 비교, 세부 메커니즘, 비판적 사고 요구.',
+    'exam': '실제 종합시험 기출 스타일로, 논문 수준의 개념과 학자를 묻는 4지선다 문제.'
+  };
+
+  const alreadyAsked = questions.map(q => q.question).join('\n');
+  const content = studyContent[currentTopic];
+
+  const prompt = `당신은 정치학 종합시험 전문가입니다. 아래 학습 자료를 바탕으로 정치학 대학원 종합시험 수준의 문제를 만드세요.
+
+학습 자료:
+${content}
+
+요구사항:
+- ${modeInstructions[currentMode]}
+- 반드시 4개의 선택지 (①②③④)
+- 이미 출제된 문제와 겹치지 않게 해주세요
+- 정답 해설: 학자명과 이론적 근거 포함 (2-3문장)
+
+이미 출제된 문제:
+${alreadyAsked || '없음'}
+
+다음 JSON 형식으로만 응답하세요. 다른 텍스트 없이:
+{
+  "question": "문제 내용",
+  "difficulty": "easy|medium|hard",
+  "keyword": "핵심 키워드",
+  "options": ["선택지1", "선택지2", "선택지3", "선택지4"],
+  "correct": 0,
+  "explanation": "해설",
+  "scholar": "관련 학자"
+}`;
+
+  try {
+    const response = await fetch("/api/claude", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-5",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content.map(i => i.text || "").join("");
+    const clean = text.replace(/```json|```/g, "").trim();
+    const q = JSON.parse(clean);
+    questions.push(q);
+    renderQuestion(q);
+  } catch(e) {
+    area.innerHTML = `<div class="error-msg">문제를 불러오는 데 실패했습니다. 네트워크를 확인해주세요.<br><br>
+    <button onclick="loadNextQuestion()" style="margin-top:10px;background:var(--gold);border:none;color:#0d0f14;padding:10px 20px;cursor:pointer;font-family:'IBM Plex Mono',monospace;">다시 시도</button></div>`;
+  }
+}
+
+function renderQuestion(q) {
+  const letters = ['A', 'B', 'C', 'D'];
+  const diffMap = { easy: '기초', medium: '중급', hard: '심화' };
+  answered = false;
+
+  const area = document.getElementById('question-area');
+  area.innerHTML = `
+    <div class="q-number">Q${currentQ + 1} / ${totalQ}</div>
+    <span class="q-difficulty ${q.difficulty}">${diffMap[q.difficulty] || q.difficulty}</span>
+    <div class="question-text">${q.question}</div>
+    <div class="keyword-tag"># ${q.keyword}</div>
+    <div class="options" id="options">
+      ${q.options.map((opt, i) => `
+        <button class="option-btn" onclick="selectAnswer(${i})" id="opt-${i}">
+          <span class="option-letter">${letters[i]}</span>
+          <span>${opt}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="feedback-box" id="feedback">
+      <div class="feedback-title" id="feedback-title"></div>
+      <div class="feedback-text" id="feedback-text"></div>
+      <div class="feedback-scholar" id="feedback-scholar"></div>
+    </div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">
+      ${currentQ + 1 >= totalQ ? '결과 보기 →' : '다음 문제 →'}
+    </button>
+  `;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const isCorrect = idx === q.correct;
+  const letters = ['A', 'B', 'C', 'D'];
+
+  // Disable all
+  document.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+  
+  // Color correct/wrong
+  document.getElementById(`opt-${q.correct}`).classList.add('correct');
+  if (!isCorrect) {
+    document.getElementById(`opt-${idx}`).classList.add('wrong');
+  }
+
+  // Scoring
+  if (isCorrect) {
+    streak++;
+    correctCount++;
+    if (streak > bestStreak) bestStreak = streak;
+    const bonus = Math.min(streak - 1, 4) * 10;
+    const points = 100 + bonus;
+    score += points;
+    showXPPop('+' + points + ' XP');
+
+    document.getElementById('feedback-title').textContent = '✓ 정답!';
+    document.getElementById('feedback-title').className = 'feedback-title correct';
+  } else {
+    streak = 0;
+    // Save to wrong notes (only in normal game mode, not retry mode)
+    if (!isRetryMode) {
+      saveWrongAnswer(q, idx, currentTopic);
+    }
+    document.getElementById('feedback-title').textContent = '✗ 오답 — 오답노트에 저장됨';
+    document.getElementById('feedback-title').className = 'feedback-title wrong';
+  }
+
+  document.getElementById('feedback-text').textContent = q.explanation;
+  document.getElementById('feedback-scholar').textContent = q.scholar ? '📖 ' + q.scholar : '';
+  document.getElementById('feedback').style.display = 'block';
+  document.getElementById('next-btn').style.display = 'block';
+  updateHUD();
+}
+
+function showXPPop(text) {
+  const el = document.createElement('div');
+  el.className = 'xp-pop';
+  el.textContent = text;
+  el.style.left = (Math.random() * 60 + 20) + '%';
+  el.style.top = '30%';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1500);
+}
+
+function nextQuestion() {
+  currentQ++;
+  updateHUD();
+  if (currentQ >= totalQ) {
+    showResult();
+  } else {
+    loadNextQuestion();
+  }
+}
+
+function showResult() {
+  document.getElementById('game-screen').style.display = 'none';
+  const result = document.getElementById('result-screen');
+  result.style.display = 'flex';
+
+  const pct = (correctCount / totalQ) * 100;
+  let grade, label, comment;
+  if (pct >= 90) { grade = 'A+'; label = '탁월한 답안'; comment = '종합시험 합격 수준입니다! 이 주제는 완벽하게 숙지했군요. 다른 주제도 도전해보세요.'; }
+  else if (pct >= 80) { grade = 'A'; label = '우수'; comment = '매우 잘 알고 있습니다. 틀린 문제의 개념을 한 번 더 복습하면 완벽할 것 같아요.'; }
+  else if (pct >= 70) { grade = 'B+'; label = '양호'; comment = '핵심 개념은 파악하고 있습니다. 학자들의 이론을 더 세밀하게 공부해보세요.'; }
+  else if (pct >= 60) { grade = 'B'; label = '보통'; comment = '기본적인 내용은 알고 있지만 심화 학습이 필요합니다. 오답 노트를 만들어보세요.'; }
+  else { grade = 'C'; label = '재도전 필요'; comment = '이 주제를 다시 한번 꼼꼼히 읽고 도전해보세요. 학습자료를 다시 리뷰하는 것을 추천합니다.'; }
+
+  const gradeColors = { 'A+': '#c9a84c', 'A': '#52c078', 'B+': '#4a90d9', 'B': '#8b5cf6', 'C': '#e05252' };
+  document.getElementById('result-grade').textContent = grade;
+  document.getElementById('result-grade').style.color = gradeColors[grade];
+  document.getElementById('result-label').textContent = label;
+  document.getElementById('r-correct').textContent = `${correctCount}/${totalQ}`;
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-streak').textContent = bestStreak;
+  document.getElementById('result-comment').textContent = comment;
+
+  // Save
+  totalXP += score;
+  totalCorrect += correctCount;
+  if (bestStreak > savedBestStreak) savedBestStreak = bestStreak;
+  localStorage.setItem('totalXP', totalXP);
+  localStorage.setItem('totalCorrect', totalCorrect);
+  localStorage.setItem('bestStreak', savedBestStreak);
+}
+
+function goHome() {
+  document.getElementById('start-screen').style.display = 'flex';
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('notebook-screen').style.display = 'none';
+  document.getElementById('total-score').textContent = totalXP;
+  document.getElementById('total-correct').textContent = totalCorrect;
+  document.getElementById('best-streak').textContent = savedBestStreak;
+  isRetryMode = false;
+  totalQ = 10;
+}
+
+function restartGame() {
+  startGame();
+}
+</script>
+</body>
+</html>
